@@ -30,6 +30,8 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @SpringBootApplication
 @RestController
 public class SocialApplication extends WebSecurityConfigurerAdapter {
@@ -44,19 +46,19 @@ public class SocialApplication extends WebSecurityConfigurerAdapter {
 		// @formatter:off
 		http
 			.authorizeRequests(a -> a
-				.antMatchers("/", "/error", "/webjars/**").permitAll()
-				.anyRequest().authenticated()
+					.requestMatchers("/", "/error", "/webjars/**").permitAll()
+					.anyRequest().authenticated()
 			)
 			.exceptionHandling(e -> e
-				.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+					.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
 			)
 			.csrf(c -> c
-				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+					.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 			)
 			.logout(l -> l
-				.logoutSuccessUrl("/").permitAll()
+					.logoutSuccessUrl("/").permitAll()
 			)
-			.oauth2Login();
+			.oauth2Login(withDefaults());
 		// @formatter:on
 	}
 
